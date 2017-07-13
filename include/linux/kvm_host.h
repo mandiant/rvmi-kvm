@@ -25,10 +25,12 @@
 #include <linux/irqflags.h>
 #include <linux/context_tracking.h>
 #include <linux/irqbypass.h>
+#include <linux/hashtable.h>
 #include <asm/signal.h>
 
 #include <linux/kvm.h>
 #include <linux/kvm_para.h>
+#include <linux/kvm_vmi.h>
 
 #include <linux/kvm_types.h>
 
@@ -282,6 +284,13 @@ struct kvm_vcpu {
 #endif
 	bool preempted;
 	struct kvm_vcpu_arch arch;
+
+	//vmi
+	uint32_t vmi_feature_enabled[KVM_VMI_FEATURE_MAX];
+	DECLARE_HASHTABLE(vmi_gfn_ht,7);
+	DECLARE_HASHTABLE(vmi_dtb_ht,7);
+	uint64_t vmi_lbr_select;
+	struct kvm_vmi_lbr_info vmi_lbr;
 };
 
 static inline int kvm_vcpu_exiting_guest_mode(struct kvm_vcpu *vcpu)

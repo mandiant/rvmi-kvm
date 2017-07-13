@@ -68,6 +68,8 @@
 #include <asm/div64.h>
 #include <asm/irq_remapping.h>
 
+#include <linux/kvm_vmi.h>
+
 #define MAX_IO_MSRS 256
 #define KVM_MAX_MCE_BANKS 32
 #define KVM_MCE_CAP_SUPPORTED (MCG_CTL_P | MCG_SER_P)
@@ -3476,6 +3478,25 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
 	case KVM_KVMCLOCK_CTRL: {
 		r = kvm_set_guest_paused(vcpu);
 		goto out;
+	}
+	case KVM_VMI_FEATURE_UPDATE: {
+		union kvm_vmi_feature feature;
+
+		r = -EFAULT;
+		if (copy_from_user(&feature, argp, sizeof(feature)))
+		    goto out;
+
+		r = kvm_x86_ops->vmi_feature_control(vcpu, &feature);
+		break;
+	}
+	case KVM_VMI_GET_LBR: {
+		r = -EFAULT;
+		if (copy_to_user(argp, &vcpu->vmi_lbr, sizeof(struct kvm_vmi_lbr_info)))
+		    goto out;
+
+		r = 0;
+
+		break;
 	}
 	default:
 		r = -EINVAL;

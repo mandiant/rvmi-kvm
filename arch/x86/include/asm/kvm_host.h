@@ -31,9 +31,11 @@
 #include <asm/mtrr.h>
 #include <asm/msr-index.h>
 #include <asm/asm.h>
+#include <linux/kvm_vmi.h>
 
 #define KVM_MAX_VCPUS 255
 #define KVM_SOFT_MAX_VCPUS 160
+
 #define KVM_USER_MEM_SLOTS 509
 /* memory slots that are not exposed to userspace */
 #define KVM_PRIVATE_MEM_SLOTS 3
@@ -283,6 +285,7 @@ struct kvm_mmu {
 	void (*invlpg)(struct kvm_vcpu *vcpu, gva_t gva);
 	void (*update_pte)(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
 			   u64 *spte, const void *pte);
+	int (*update_pte_access)(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access);
 	hpa_t root_hpa;
 	int root_level;
 	int shadow_root_level;
@@ -911,6 +914,7 @@ struct kvm_x86_ops {
 	void (*post_block)(struct kvm_vcpu *vcpu);
 	int (*update_pi_irte)(struct kvm *kvm, unsigned int host_irq,
 			      uint32_t guest_irq, bool set);
+	int (*vmi_feature_control)(struct kvm_vcpu *vcpu, union kvm_vmi_feature *feature);
 };
 
 struct kvm_arch_async_pf {

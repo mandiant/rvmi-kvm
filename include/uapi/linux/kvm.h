@@ -12,6 +12,8 @@
 #include <linux/ioctl.h>
 #include <asm/kvm.h>
 
+#include <linux/kvm_vmi.h>
+
 #define KVM_API_VERSION 12
 
 /* *** Deprecated interfaces *** */
@@ -341,6 +343,8 @@ struct kvm_run {
 		/* Fix the size of the union. */
 		char padding[256];
 	};
+
+        union kvm_vmi_event vmi_event;
 
 	/*
 	 * shared registers between kvm and userspace.
