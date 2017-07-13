@@ -2,6 +2,8 @@
 #define __KVM_HOST_H
 
 /*
+ * Copyright (c) 2017 FireEye, Inc. All Rights Reserved.
+ *
  * This work is licensed under the terms of the GNU GPL, version 2.  See
  * the COPYING file in the top-level directory.
  */
@@ -26,10 +28,12 @@
 #include <linux/context_tracking.h>
 #include <linux/irqbypass.h>
 #include <linux/swait.h>
+#include <linux/hashtable.h>
 #include <asm/signal.h>
 
 #include <linux/kvm.h>
 #include <linux/kvm_para.h>
+#include <linux/kvm_vmi.h>
 
 #include <linux/kvm_types.h>
 
@@ -265,6 +269,12 @@ struct kvm_vcpu {
 	bool preempted;
 	struct kvm_vcpu_arch arch;
 	struct dentry *debugfs_dentry;
+
+	//vmi
+	uint32_t vmi_feature_enabled[KVM_VMI_FEATURE_MAX];
+	DECLARE_HASHTABLE(vmi_dtb_ht,7);
+	uint64_t vmi_lbr_select;
+	struct kvm_vmi_lbr_info vmi_lbr;
 };
 
 static inline int kvm_vcpu_exiting_guest_mode(struct kvm_vcpu *vcpu)

@@ -17,7 +17,7 @@ kvm-y			+= x86.o mmu.o emulate.o i8259.o irq.o lapic.o \
 
 kvm-$(CONFIG_KVM_DEVICE_ASSIGNMENT)	+= assigned-dev.o iommu.o
 
-kvm-intel-y		+= vmx.o pmu_intel.o
+kvm-intel-y		+= vmx.o pmu_intel.o vmi.o
 kvm-amd-y		+= svm.o pmu_amd.o
 
 obj-$(CONFIG_KVM)	+= kvm.o
