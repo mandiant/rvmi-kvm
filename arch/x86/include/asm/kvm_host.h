@@ -3,6 +3,8 @@
  *
  * This header defines architecture specific interfaces, x86 version
  *
+ * Copyright (c) 2017 FireEye, Inc. All Rights Reserved.
+ *
  * This work is licensed under the terms of the GNU GPL, version 2.  See
  * the COPYING file in the top-level directory.
  *
@@ -34,6 +36,8 @@
 #include <asm/msr-index.h>
 #include <asm/asm.h>
 #include <asm/kvm_page_track.h>
+
+#include <linux/kvm_vmi.h>
 
 #define KVM_MAX_VCPUS 288
 #define KVM_SOFT_MAX_VCPUS 240
@@ -1057,6 +1061,8 @@ struct kvm_x86_ops {
 	void (*cancel_hv_timer)(struct kvm_vcpu *vcpu);
 
 	void (*setup_mce)(struct kvm_vcpu *vcpu);
+
+	int (*vmi_feature_control)(struct kvm_vcpu *vcpu, union kvm_vmi_feature *feature);
 };
 
 struct kvm_arch_async_pf {
