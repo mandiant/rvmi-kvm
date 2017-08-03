@@ -32,63 +32,58 @@
 #define MSR_LBR_FROM                      0x680
 #define MSR_LBR_TO                        0x6c0
 
-enum KVM_VMI_FEATURE {
-    KVM_VMI_FEATURE_TRAP_TASK_SWITCH = 0,
-    KVM_VMI_FEATURE_LBR,
-	KVM_VMI_FEATURE_MTF,
-    KVM_VMI_FEATURE_MAX
-};
+#define KVM_VMI_FEATURE_TRAP_TASK_SWITCH  0
+#define KVM_VMI_FEATURE_LBR               1
+#define KVM_VMI_FEATURE_MTF               2
+#define KVM_VMI_FEATURE_MAX               3
+
+#define KVM_VMI_EVENT_TASK_SWITCH         0
+#define KVM_VMI_EVENT_DEBUG               1
+#define KVM_VMI_EVENT_MTF                 2
 
 struct kvm_vmi_feature_task_switch {
-    enum KVM_VMI_FEATURE feature;
-    bool enable;
+    __u32 feature;
+    __u8 enable;
     __u64 dtb;
-    bool in;
-    bool out;
+    __u8 in;
+    __u8 out;
 };
 
 struct kvm_vmi_feature_lbr {
-    enum KVM_VMI_FEATURE feature;
-    bool enable;
+    __u32 feature;
+    __u8 enable;
     __u64 lbr_select;
 };
 
 struct kvm_vmi_feature_mtf {
-	enum KVM_VMI_FEATURE feature;
-	bool enable;
+	__u32 feature;
+	__u8  enable;
 };
 
 union kvm_vmi_feature {
-    enum KVM_VMI_FEATURE feature;
+    __u32 feature;
     struct kvm_vmi_feature_task_switch ts;
     struct kvm_vmi_feature_lbr lbr;
 	struct kvm_vmi_feature_mtf mtf;
 };
 
-enum KVM_VMI_EVENT {
-    KVM_VMI_EVENT_TASK_SWITCH = 0,
-	KVM_VMI_EVENT_DEBUG,
-	KVM_VMI_EVENT_MTF,
-    KVM_VMI_EVENT_MAX
-};
-
 struct kvm_vmi_event_task_switch {
-    enum KVM_VMI_EVENT type;
+    __u32 type;
     __u64 old_cr3;
     __u64 new_cr3;
 };
 
 struct kvm_vmi_event_debug {
-    enum KVM_VMI_EVENT type;
-    bool single_step;
-    bool watchpoint;
+    __u32 type;
+    __u8 single_step;
+    __u8 watchpoint;
     __u64 watchpoint_gva;
     int32_t watchpoint_flags;
     int32_t exception;
 };
 
 union kvm_vmi_event {
-    enum KVM_VMI_EVENT type;
+    __u32 type;
     struct kvm_vmi_event_task_switch ts;
     struct kvm_vmi_event_debug debug;
 };
